@@ -7,6 +7,7 @@ def show_image(image):
     # cv2.imwrite('test.png',canvas)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+    print('d')
 
 def draw_circle(image,center):
     radius = 20
