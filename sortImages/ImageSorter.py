@@ -78,9 +78,10 @@ class ImageSorter:
     
     def load_list_box(self):
         dirs = Utilies.get_dirs(path=self.main_folder,extention=self.extention)
-        self.window["-LISTBOX-"].update(dirs.values()) 
-        self.window['-LISTBOX-'].update(set_to_index=0)
-        self.show_image('-SECONDARY_IMAGE-',self.window["-LISTBOX-"].Values[0])
+        if len(dirs)>0:
+            self.window["-LISTBOX-"].update(dirs.values()) 
+            self.window['-LISTBOX-'].update(set_to_index=0)
+            self.show_image('-SECONDARY_IMAGE-',self.window["-LISTBOX-"].Values[0])
 
 
     def run(self):
