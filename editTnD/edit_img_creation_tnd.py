@@ -22,7 +22,7 @@ def dir_name(path):
     return os.path.dirname(path)
 
 def rename_folder(path,new_name):
-    old_name = dir_name(path).split(os.sep)[-1]
+    old_name = dir_name(path).split('/')[-1]
     new_path = path.replace(old_name,new_name)
     os.rename(dir_name(path), dir_name(new_path))
 
@@ -55,7 +55,8 @@ def add_dates_to_images(folder_path, selected_date):
                 exif_dict['Exif'][piexif.ExifIFD.DateTimeDigitized] = new_date
                 exif_bytes = piexif.dump(exif_dict)
                 piexif.insert(exif_bytes, file_path)   
-       
+        rename_folder(file_path,new_datetime.strftime("%Y-%m-%d"))
+
     except Exception as e:
         sg.popup_error(f"Error: {e}")
         return False  
