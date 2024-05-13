@@ -3,6 +3,14 @@ import os
 from datetime import datetime
 import piexif
 from datetime import datetime, timedelta
+from glob import glob
+from PIL import Image, ImageTk
+def get_imgs(path):
+    main_path =glob(path+'/*')
+    img = Image.open(main_path[0])
+    img.thumbnail((500,400))
+    img = ImageTk.PhotoImage(img)
+    return img
 
 def calculate_future_date(birth_date_str, target_age):
     try:
@@ -66,7 +74,8 @@ def add_dates_to_images(folder_path, selected_date):
 
 layout = [
     [sg.Text('Select a folder containing images:')],
-    [sg.InputText(key='-FOLDER-'), sg.FolderBrowse()],
+     [sg.Image(key='-IMAGE-')],
+    [sg.InputText(key='-FOLDER-',enable_events=True), sg.FolderBrowse()],
     [sg.Text('Select date:')],
     [sg.Combo(values=list(range(1, 32)), default_value=1, size=(5, 1), key='-DAY-'),
      sg.Combo(values=list(range(1, 13)), default_value=1, size=(5, 1), key='-MONTH-'),
@@ -75,7 +84,8 @@ layout = [
     [sg.Text('Age Calculator:'),sg.InputText(key='-CAL_TEXT-'),sg.Button('Calculate Age',key='CAL')],
     [    [sg.Combo(values=list(range(1, 32)), default_value=1, size=(5, 1), key='-DAY_CAL-'),
      sg.Combo(values=list(range(1, 13)), default_value=1, size=(5, 1), key='-MONTH_CAL-'),
-     sg.Combo(values=list(range(1900, 2031)), default_value=datetime.now().year, size=(5, 1), key='-YEAR_CAL-')],]
+     sg.Combo(values=list(range(1900, 2031)), default_value=datetime.now().year, size=(5, 1), key='-YEAR_CAL-')],
+    ]
 ]
 
 window = sg.Window('Image Date Editor', layout)
@@ -84,12 +94,19 @@ while True:
 
     if event == sg.WIN_CLOSED or event == 'Exit':
         break
+    elif event =='-FOLDER-':
+        folder_path = values['-FOLDER-']
+
+        img = get_imgs(folder_path)
+        window['-IMAGE-'].update(data=img)
     elif event == 'Add Dates':
         folder_path = values['-FOLDER-']
         selected_date = {'-DAY-': int(values['-DAY-']),'-MONTH-': int(values['-MONTH-']),'-YEAR-': int(values['-YEAR-'])}
         new_datetime= add_dates_to_images(folder_path, selected_date)
         if new_datetime:            
             sg.popup('Dates added successfully!', title='Success')
+            window['-IMAGE-'].update(data='')
+
         else:
             sg.popup_error('Dates adding Failed!', title='Error')
     elif event == 'CAL':
