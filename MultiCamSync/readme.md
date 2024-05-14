@@ -2,6 +2,11 @@
 
 This project is a simple GUI application that allows you to synchronize two videos either by their creation date or by their audio.
 
+## Installation
+
+Before running the script, you need to install the required Python libraries. You can do this by running the following command in your terminal:
+pip install -r requirements.txt
+
 ## Features
 
 - Synchronize videos by creation date
